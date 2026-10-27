@@ -15,6 +15,10 @@
 
         <section class="group">
           <label class="lbl">Layout</label>
+          <div id="kindPicker" class="seg tabs">
+            <button type="button" data-kind="panel">Panels</button>
+            <button type="button" data-kind="popup">Pop-ups</button>
+          </div>
           <div id="templatePicker" class="chips"></div>
         </section>
 
@@ -38,7 +42,7 @@
 
         <section class="group">
           <label class="lbl">Look</label>
-          <div class="row">
+          <div class="row" id="widthRow">
             <span>Width</span>
             <input type="range" id="width" min="240" max="900" step="10" />
             <output id="widthOut"></output>

@@ -48,6 +48,26 @@ const list = (items = [], { checkable = false, numbered = false, strike = false,
 const section = (title, body) =>
   body ? `${title ? `<div class="ui-section"><span>${fmt(title)}</span></div>` : ''}${body}` : '';
 
+// Shared by pop-ups: framed badge, or floating outlined text with no panel.
+const frameField = {
+  key: 'frame',
+  label: 'Frame',
+  type: 'select',
+  options: [
+    { value: 'badge', label: 'Badge (framed)' },
+    { value: 'float', label: 'Floating text (no frame)' },
+  ],
+  default: 'badge',
+};
+const bare = (f) => (f.frame === 'float' ? ' bare' : '');
+
+// 'up' / 'down' for colouring a number against a baseline (non-numbers stay neutral).
+const num = (s) => parseFloat(String(s).replace(/[^\d.-]/g, ''));
+const trend = (a, b = 0) => {
+  const d = num(a) - num(b);
+  return d > 0 ? 'up' : d < 0 ? 'down' : '';
+};
+
 export const RARITIES = {
   common: { label: 'Common', color: '#d9d9d9' },
   uncommon: { label: 'Uncommon', color: '#4fd16b' },
@@ -309,7 +329,82 @@ export const templates = {
       </div>`;
     },
   },
+
+  // Pop-ups: small overlays that size to their content (no width setting).
+  xp: {
+    name: 'XP drop',
+    kind: 'popup',
+    width: null,
+    fields: [
+      { key: 'amount', label: 'Amount', type: 'text', default: '+30' },
+      { key: 'unit', label: 'Unit', type: 'text', default: 'XP' },
+      { key: 'skill', label: 'Label (optional)', type: 'text', default: 'Cooking' },
+      { key: 'emoji', label: 'Icon (emoji or symbol)', type: 'text', default: '⭐' },
+      { key: 'image', label: 'Icon image (overrides emoji)', type: 'image', default: '' },
+      frameField,
+    ],
+    render(f) {
+      return `
+      <div class="ui ui-pop ui-xp${bare(f)}">
+        ${icon(f, 'ui-icon small')}
+        <div>
+          <div class="ui-pop-big">${fmt(f.amount)}${f.unit ? ` <span class="unit">${fmt(f.unit)}</span>` : ''}</div>
+          ${f.skill ? `<div class="ui-meta">${fmt(f.skill)}</div>` : ''}
+        </div>
+      </div>`;
+    },
+  },
+
+  boost: {
+    name: 'Skill boost',
+    kind: 'popup',
+    width: null,
+    fields: [
+      { key: 'heading', label: 'Heading', type: 'text', default: 'Skill boost' },
+      { key: 'amount', label: 'Amount (green if +, red if −)', type: 'text', default: '+2' },
+      { key: 'skill', label: 'Skill', type: 'text', default: 'Crafting' },
+      { key: 'duration', label: 'Duration badge (optional)', type: 'text', default: '5:00' },
+      { key: 'emoji', label: 'Icon (emoji or symbol)', type: 'text', default: '🔨' },
+      { key: 'image', label: 'Icon image (overrides emoji)', type: 'image', default: '' },
+      frameField,
+    ],
+    render(f) {
+      return `
+      <div class="ui ui-pop ui-boost${bare(f)}">
+        ${icon(f, 'ui-icon small')}
+        <div>
+          ${f.heading ? `<div class="ui-kicker">${fmt(f.heading)}</div>` : ''}
+          <div class="ui-pop-big"><span class="${trend(f.amount)}">${fmt(f.amount)}</span>${f.skill ? ` <span class="name">${fmt(f.skill)}</span>` : ''}</div>
+        </div>
+        ${f.duration ? `<div class="ui-badge">${fmt(f.duration)}</div>` : ''}
+      </div>`;
+    },
+  },
+
+  level: {
+    name: 'Skill level',
+    kind: 'popup',
+    width: null,
+    fields: [
+      { key: 'current', label: 'Current level (green if above base, red if below)', type: 'text', default: '32' },
+      { key: 'base', label: 'Base level (optional)', type: 'text', default: '30' },
+      { key: 'skill', label: 'Skill', type: 'text', default: 'Crafting' },
+      { key: 'emoji', label: 'Icon (emoji or symbol)', type: 'text', default: '🔨' },
+      { key: 'image', label: 'Icon image (overrides emoji)', type: 'image', default: '' },
+      frameField,
+    ],
+    render(f) {
+      return `
+      <div class="ui ui-pop ui-level${bare(f)}">
+        ${icon(f, 'ui-icon small')}
+        <div class="ui-pop-big"><span class="${f.base ? trend(f.current, f.base) : ''}">${fmt(f.current)}</span>${f.base ? `<span class="base">/${fmt(f.base)}</span>` : ''}</div>
+        ${f.skill ? `<div class="ui-meta">${fmt(f.skill)}</div>` : ''}
+      </div>`;
+    },
+  },
 };
+
+export const kindOf = (key) => templates[key]?.kind || 'panel';
 
 export const themes = [
   { id: 'stone', name: 'Old wood', colors: ['#2b2118', '#f2c14e'] },

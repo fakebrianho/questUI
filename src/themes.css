@@ -91,6 +91,53 @@
 .ui-item .ui-list { color: var(--done); }
 .ui-item .ui-list .bullet { background: var(--done); }
 
+/* Pop-ups: size to their content; "bare" drops the theme frame for floating text */
+.ui.ui-pop { width: auto; display: inline-flex; align-items: center; gap: 0.6em; padding: 0.45em 0.95em 0.45em 0.55em; --pop-outline: #000; }
+.ui.ui-pop:not(:has(.ui-icon)) { padding-left: 0.95em; }
+.ui-pop-big { font-family: var(--font-title); color: var(--accent); font-size: 1.9em; line-height: 1.05; white-space: nowrap; text-transform: var(--title-tt, none); letter-spacing: var(--title-ls, 0.01em); }
+.ui-pop-big .unit { font-size: 0.62em; color: var(--title); }
+.ui-pop .ui-meta, .ui-pop .ui-kicker { white-space: nowrap; }
+.ui-pop .ui-meta { margin-top: 0.1em; }
+.ui-pop .up { color: var(--done); }
+.ui-pop .down { color: var(--todo); }
+.ui.ui-pop.bare { background: none; border: none; box-shadow: none; padding: 0.2em; }
+.ui.ui-pop.bare::before, .ui.ui-pop.bare::after { display: none; }
+.ui-pop.bare .ui-icon { background: none; border: none; }
+.ui-pop.bare .ui-icon span { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); }
+.ui-pop.bare .ui-pop-big, .ui-pop.bare .ui-meta, .ui-pop.bare .ui-kicker, .ui-pop.bare .ui-badge {
+  -webkit-text-stroke: 0.14em var(--pop-outline);
+  paint-order: stroke fill;
+  text-shadow: 0 0.08em 0.15em rgba(0, 0, 0, 0.5);
+}
+.ui-pop.bare .ui-meta { color: var(--text); -webkit-text-stroke-width: 0.25em; }
+.ui-pop.bare .ui-kicker, .ui-pop.bare .ui-badge { -webkit-text-stroke-width: 0.28em; }
+
+/* Skill boost: "+2 Crafting" with a kicker and optional duration */
+.ui-boost .ui-kicker { font-size: 0.7em; margin-bottom: 0.15em; }
+.ui-boost .ui-pop-big { font-size: 1.55em; }
+.ui-boost .ui-pop-big .name { color: var(--title); }
+.ui-boost .ui-badge { margin-left: 0.4em; font-size: 0.8em; }
+
+/* Skill level: stacked tile, "32/30" */
+.ui.ui-level, .ui.ui-level:not(:has(.ui-icon)) { flex-direction: column; gap: 0.3em; padding: 0.7em 1.2em 0.6em; text-align: center; }
+.ui-level .ui-pop-big { font-size: 2.3em; }
+.ui-level .ui-pop-big .base { color: var(--muted); font-size: 0.6em; }
+.ui-level .ui-meta { margin-top: 0; }
+
+.theme-stone.ui-pop .ui-pop-big { text-shadow: 0 2px 0 #000; }
+.theme-parchment.ui-pop { --pop-outline: #efe0bb; }
+.theme-parchment.ui-pop.bare .ui-meta { color: var(--muted); }
+.theme-pixel.ui-pop .ui-pop-big { text-shadow: 3px 3px 0 #000; }
+.theme-pixel.ui-pop.bare :is(.ui-pop-big, .ui-meta, .ui-kicker, .ui-badge) { -webkit-text-stroke: 0; text-shadow: 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000, 3px 3px 0 #000; }
+.theme-arcane.ui-pop .ui-pop-big { text-shadow: 0 0 14px rgba(185, 166, 255, 0.7); }
+.theme-arcane.ui-pop:not(.bare) { padding-top: 0.6em; padding-bottom: 0.6em; }
+.theme-hud.ui-pop .ui-pop-big { text-shadow: 0 0 10px rgba(63, 240, 255, 0.6); }
+.theme-hud.ui-pop .ui-meta { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72em; }
+.theme-glass.ui-pop { border-radius: 99px; }
+.theme-glass.ui-level { border-radius: 18px; }
+.theme-glass.ui-pop .ui-pop-big { font-weight: 800; }
+.theme-glass.ui-pop .ui-icon { border-radius: 50%; }
+
 /* ---------- Old wood: dark panel, gold trim ---------- */
 .theme-stone {
   --bg: #2b2118; --bg-head: #3a2c1d; --line: #5d4529; --title: #f2c14e; --text: #e8d9b5; --muted: #b9a57d;

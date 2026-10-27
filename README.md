@@ -19,6 +19,8 @@ To build a static version you can host anywhere: `npm run build` (output goes to
 
 **Layouts:** Quest journal, Quest complete, Quest progression, Item tooltip, Achievement toast, Level up
 
+**Pop-ups** (small overlays that size to their content): XP drop ("+30 XP"), Skill boost ("+2 Crafting"), Skill level ("32/30", green when boosted above base, red when drained below). Each can be a framed badge or floating outlined text
+
 **Styles:** Old wood, Parchment, 8-bit, Arcane, Sci-fi HUD, Clean. Every layout works with every style.
 
 **Editing**
@@ -37,5 +39,5 @@ To build a static version you can host anywhere: `npm run build` (output goes to
 
 ## Adding your own
 
-- New layout: add an entry to `templates` in `src/templates.js` (a list of fields and a `render()` that returns HTML using the shared `ui-*` classes).
+- New layout: add an entry to `templates` in `src/templates.js` (give it `kind: 'popup'` and `width: null` to put it on the Pop-ups tab) (a list of fields and a `render()` that returns HTML using the shared `ui-*` classes).
 - New style: add a `.theme-yourname { ... }` block in `src/themes.css` (set the CSS variables at the top of any existing theme) and list it in `themes` in `src/templates.js`.

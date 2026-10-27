@@ -1,5 +1,5 @@
 import { toPng, toBlob } from 'html-to-image';
-import { templates, themes } from './templates.js';
+import { templates, themes, kindOf } from './templates.js';
 
 // Fonts are bundled locally (not from a CDN) so the PNG exporter can embed them.
 import '@fontsource/cinzel/latin-400.css';
@@ -69,7 +69,7 @@ function renderPreview() {
   const ui = frame.firstElementChild;
   ui.classList.add(`theme-${state.theme}`);
   const l = look();
-  ui.style.setProperty('--w', `${l.width}px`);
+  if (tpl.width) ui.style.setProperty('--w', `${l.width}px`);
   ui.style.setProperty('--fs', l.fontScale);
   ui.style.setProperty('--op', l.opacity);
   if (l.accent) ui.style.setProperty('--accent', l.accent);
@@ -78,7 +78,10 @@ function renderPreview() {
 
 // ---------- pickers ----------
 function renderPickers() {
+  const kind = kindOf(state.template);
+  document.querySelectorAll('#kindPicker button').forEach((b) => b.classList.toggle('on', b.dataset.kind === kind));
   $('#templatePicker').innerHTML = Object.entries(templates)
+    .filter(([k]) => kindOf(k) === kind)
     .map(([k, t]) => `<button type="button" data-tpl="${k}" class="${k === state.template ? 'on' : ''}">${t.name}</button>`)
     .join('');
   $('#themePicker').innerHTML = themes
@@ -96,6 +99,16 @@ $('#templatePicker').addEventListener('click', (e) => {
   if (!k || k === state.template) return;
   state.template = k;
   ensureTemplate(k);
+  renderAll();
+});
+$('#kindPicker').addEventListener('click', (e) => {
+  const kind = e.target.closest('button')?.dataset.kind;
+  if (!kind || kind === kindOf(state.template)) return;
+  // Come back to whichever layout was last open on that tab.
+  state.lastByKind = { ...state.lastByKind, [kindOf(state.template)]: state.template };
+  const last = state.lastByKind[kind];
+  state.template = kindOf(last) === kind && templates[last] ? last : Object.keys(templates).find((k) => kindOf(k) === kind);
+  ensureTemplate(state.template);
   renderAll();
 });
 $('#themePicker').addEventListener('click', (e) => {
@@ -310,6 +323,7 @@ function syncRewards() {
 }
 function syncLook() {
   syncers.forEach((s) => s());
+  $('#widthRow').hidden = !templates[state.template].width;
   syncRewards();
   if (look().accent) accentInput.value = look().accent;
   else {
@@ -339,7 +353,7 @@ function exportOptions() {
 
 function fileName() {
   const d = data();
-  const base = d.title || d.skill || d.heading || state.template;
+  const base = d.title || d.skill || d.heading || d.amount || state.template;
   const slug = String(base).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'ui';
   return `${slug}-${state.template}-${state.theme}@${$('#exportScale').value}x.png`;
 }

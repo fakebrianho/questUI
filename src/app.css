@@ -22,6 +22,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .group { margin-top: 22px; }
 .lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); margin-bottom: 8px; }
 
+.tabs { margin-bottom: 10px; }
+.tabs button { flex: 1; background: var(--panel-2); border: 1px solid var(--line); padding: 6px 11px; cursor: pointer; font-size: 13px; }
+
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 99px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
 .chips button:hover { border-color: #4a4a58; }
@@ -56,6 +59,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .img-field img { width: 34px; height: 34px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
 
 .row { display: grid; grid-template-columns: 74px 1fr 48px; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+.row[hidden] { display: none; }
 .row input[type=range] { accent-color: var(--acc); width: 100%; }
 .row output { text-align: right; color: var(--txt); font-variant-numeric: tabular-nums; }
 .row input[type=color] { width: 100%; height: 28px; background: none; border: 1px solid var(--line); border-radius: 6px; padding: 2px; }
